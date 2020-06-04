@@ -1,4 +1,4 @@
-## React Clock Component
+# React Clock Component
 
 An exercise to create a clock as a functional component which can be customised by passing optional props.
 
@@ -21,6 +21,14 @@ ReactDOM.render(
   document.getElementById("root")
 );
 ```
+- This shows all the possible props.
+- You can pass as many or as few of these as you wish, as all of the props have defaults.
+- Size is in px
+- Colors can be any format supported by HTML
+- digitalOn is a boolean to turn the digital display on or off
+
+
+# Notes from Create React App
 
 This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
 
