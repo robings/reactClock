@@ -1,3 +1,27 @@
+## React Clock Component
+
+An exercise to create a clock as a functional component which can be customised by passing optional props.
+
+- An example of the component in use:
+
+```
+import FaceTurnClock from "./Components/FaceTurnClock/FaceTurnClock";
+
+ReactDOM.render(
+  <FaceTurnClock
+    size={"600"}
+    clockOuterColor={"green"}
+    clockOuterBorder={"orange"}
+    clockInnerColor={"silver"}
+    timePointerColor={"gold"}
+    faceNosColor={"gold"}
+    digitalOn={true}
+    digitalColor={"whitesmoke"}
+  />,
+  document.getElementById("root")
+);
+```
+
 This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
 
 ## Available Scripts
