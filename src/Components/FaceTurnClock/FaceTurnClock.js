@@ -155,7 +155,7 @@ function FaceTurnClock(props) {
       (m * (360 / 12)) / 60 +
       (s * (360 / 12)) / 60 / 60;
 
-      let dayRotationSet = (360/7)*(day-1);
+    let dayRotationSet = (360 / 7) * (day - 1);
 
     let timeString = "";
     timeString =
@@ -279,6 +279,56 @@ function FaceTurnClock(props) {
         </g>
 
         <g id="turningDaysRing" transform={dayOfWeekRotation}></g>
+
+        <g id="dateRing">
+          <circle r="48" cx="265" cy="195" fill={clockOuterColor} />
+          <circle
+            r="46"
+            cx="265"
+            cy="195"
+            fill={clockOuterColor}
+            strokeWidth={1}
+            stroke={clockOuterBorder}
+          />
+          <circle
+            r="36"
+            cx="265"
+            cy="195"
+            fill={clockOuterColor}
+            strokeWidth={1}
+            stroke={clockOuterBorder}
+          />
+          <circle r="34" cx="265" cy="195" fill={clockInnerColor} />
+        </g>
+
+        <g id="datePointer">
+          <line
+            x1="265"
+            y1="162"
+            x2="265"
+            y2="180"
+            strokeWidth={1}
+            stroke={timePointerColor}
+          />
+          <line
+            x1="265"
+            y1="162"
+            x2="263"
+            y2="166"
+            strokeWidth={1}
+            stroke={timePointerColor}
+          />
+          <line
+            x1="265"
+            y1="162"
+            x2="267"
+            y2="166"
+            strokeWidth={1}
+            stroke={timePointerColor}
+          />
+        </g>
+
+        <g id="turningDateRing"></g>
       </svg>
       <div
         className={digitalOn ? "digitalClock visible" : "digitalClock hidden"}
