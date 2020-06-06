@@ -43,7 +43,10 @@ function FaceTurnClock(props) {
   const [twelveHourRotationAmount, setTwelveHourRotationAmount] = useState(0);
   const [dayOfWeekRotationAmount, setDayOfWeekRotationAmount] = useState(0);
   const [dateRotationAmount, setDateRotationAmount] = useState(0);
-  const [twentyFourHourRotationAmount, setTwentyFourHourRotationAmount] = useState(0);
+  const [
+    twentyFourHourRotationAmount,
+    setTwentyFourHourRotationAmount,
+  ] = useState(0);
   const [month, setMonth] = useState("");
   const [year, setYear] = useState("");
   const [timeString, setTimeString] = useState("00:00:00");
@@ -161,23 +164,28 @@ function FaceTurnClock(props) {
   }
 
   function buildTwentyFourHourRing() {
-    let svgElement=document.getElementById('turningTwentyFourHrRing')
-for(let i=0; i<24; i++) {
+    let svgElement = document.getElementById("turningTwentyFourHrRing");
+    for (let i = 0; i < 24; i++) {
+      let hourValue = i === 0 ? 24 : i;
+      let newGroup = document.createElementNS(
+        "http://www.w3.org/2000/svg",
+        "g"
+      );
+      let dateNum = document.createElementNS(
+        "http://www.w3.org/2000/svg",
+        "text"
+      );
+      let xValue = hourValue > 9 ? 197 : 199;
 
-    let hourValue = i === 0 ? 24 : i
-    let newGroup=document.createElementNS('http://www.w3.org/2000/svg', 'g')
-    let dateNum = document.createElementNS('http://www.w3.org/2000/svg', 'text')
-    let xValue = hourValue > 9 ? 197 : 199
-
-    dateNum.setAttribute('x', xValue)
-    dateNum.setAttribute('y', '226')
-    dateNum.setAttribute('font-size', '0.35rem')
-    dateNum.setAttribute("fill", faceNosColor);
-    dateNum.textContent=`${hourValue}`
-    svgElement.appendChild(newGroup)
-    newGroup.appendChild(dateNum)
-    newGroup.setAttribute('transform', `rotate(${i*(360/24)} 200 265)`)
-}
+      dateNum.setAttribute("x", xValue);
+      dateNum.setAttribute("y", "226");
+      dateNum.setAttribute("font-size", "0.35rem");
+      dateNum.setAttribute("fill", faceNosColor);
+      dateNum.textContent = `${hourValue}`;
+      svgElement.appendChild(newGroup);
+      newGroup.appendChild(dateNum);
+      newGroup.setAttribute("transform", `rotate(${i * (360 / 24)} 200 265)`);
+    }
   }
 
   const mount = () => {
@@ -218,7 +226,8 @@ for(let i=0; i<24; i++) {
 
     let dateRotationSet = (360 / 31) * (date - 1);
 
-    let twentyFourHourRotationSet = (h*(360/24)) + ((m*(360/24))/60) + (((s*(360/24))/60)/60)
+    let twentyFourHourRotationSet =
+      h * (360 / 24) + (m * (360 / 24)) / 60 + (s * (360 / 24)) / 60 / 60;
 
     let timeString = "";
     timeString =
@@ -233,7 +242,7 @@ for(let i=0; i<24; i++) {
     setDateRotationAmount(dateRotationSet);
     setMonth(_month);
     setYear(_year);
-    setTwentyFourHourRotationAmount(twentyFourHourRotationSet)
+    setTwentyFourHourRotationAmount(twentyFourHourRotationSet);
     setTimeString(timeString);
   }
 
@@ -494,23 +503,30 @@ for(let i=0; i<24; i++) {
         </g>
 
         <g id="turningTwentyFourHrRing" transform={twentyFourHourRotation}></g>
+
+        <g id="digitalDisplay" className={digitalOn ? "visible" : "hidden"}>
+          <rect x="168" y="121" width="64" height="23" fill={clockOuterColor} />
+          <line
+            x1="168"
+            y1="123"
+            x2="232"
+            y2="123"
+            strokeWidth={1}
+            stroke={clockOuterBorder}
+          />
+          <line
+            x1="168"
+            y1="142"
+            x2="232"
+            y2="142"
+            strokeWidth={1}
+            stroke={clockOuterBorder}
+          />
+          <text x="171" y="138" fill={faceNosColor}>
+            {timeString}
+          </text>
+        </g>
       </svg>
-      <div
-        className={digitalOn ? "digitalClock visible" : "digitalClock hidden"}
-        style={{
-          backgroundColor: clockOuterColor,
-          borderColor: clockOuterBorder,
-        }}
-      >
-        <div
-          style={{
-            color: digitalColor,
-            fontSize: Math.round(size / 20),
-          }}
-        >
-          {timeString}
-        </div>
-      </div>
     </div>
   );
 }
