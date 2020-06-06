@@ -9,7 +9,7 @@ const clockSettings = {
   clockInnerColor: "whitesmoke",
   timePointerColor: "gold",
   faceNosColor: "gold",
-  digitalOn: false,
+  digitalOn: true,
   digitalColor: "#EBBD3F",
 };
 
