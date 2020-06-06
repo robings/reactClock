@@ -40,7 +40,8 @@ function FaceTurnClock(props) {
       ? props.clockSettings.digitalColor
       : "#CA6702"
   );
-  const [rotationAmount, setRotationAmount] = useState(0);
+  const [twelveHourRotationAmount, setTwelveHourRotationAmount] = useState(0);
+  const [dayOfWeekRotationAmount, setDayOfWeekRotationAmount] = useState(0);
   const [timeString, setTimeString] = useState("00:00:00");
   const [runClock, setRunClock] = useState("");
 
@@ -49,7 +50,7 @@ function FaceTurnClock(props) {
     { faceNo: "I", x: 198 },
     { faceNo: "II", x: 194 },
     { faceNo: "III", x: 192 },
-    { faceNo: "IIII", x: 192 },
+    { faceNo: "IIII", x: 188 },
     { faceNo: "V", x: 194 },
     { faceNo: "VI", x: 190 },
     { faceNo: "VII", x: 188 },
@@ -60,7 +61,7 @@ function FaceTurnClock(props) {
   ];
 
   function buildTwelveHourRing() {
-    let svg = document.getElementById("turningClockFace");
+    let svgElement = document.getElementById("turningClockFace");
     for (let i = 0; i < 12 * 4; i++) {
       let newLine = document.createElementNS(
         "http://www.w3.org/2000/svg",
@@ -78,7 +79,7 @@ function FaceTurnClock(props) {
       newLine.setAttribute("y2", "74");
       newLine.setAttribute("stroke", clockOuterBorder);
       newLine.setAttribute("transform", `rotate(${i * 7.5}, 200, 200)`);
-      svg.appendChild(newLine);
+      svgElement.appendChild(newLine);
     }
     faceNos.forEach((_faceNo, key) => {
       let faceNoGroup = document.createElementNS(
@@ -93,7 +94,7 @@ function FaceTurnClock(props) {
       faceNoElement.setAttribute("y", 67);
       faceNoElement.textContent = _faceNo.faceNo;
       faceNoElement.setAttribute("fill", faceNosColor);
-      svg.appendChild(faceNoGroup);
+      svgElement.appendChild(faceNoGroup);
       faceNoGroup.appendChild(faceNoElement);
       faceNoGroup.setAttribute(
         "transform",
@@ -102,8 +103,33 @@ function FaceTurnClock(props) {
     });
   }
 
+  function buildDayOfWeekRing() {
+    let svgElement = document.getElementById("turningDaysRing");
+    const daysOfTheWeek = ["MON", "TUE", "WED", "THU", "FRI", "SAT", "SUN"];
+    for (let i = 0; i < 7; i++) {
+      let dOWGroup = document.createElementNS(
+        "http://www.w3.org/2000/svg",
+        "g"
+      );
+      let dOWElement = document.createElementNS(
+        "http://www.w3.org/2000/svg",
+        "text"
+      );
+
+      dOWElement.setAttribute("x", 125);
+      dOWElement.setAttribute("y", 157);
+      dOWElement.textContent = daysOfTheWeek[i];
+      dOWElement.setAttribute("fill", faceNosColor);
+      dOWElement.setAttribute("font-size", "0.5rem");
+      svgElement.appendChild(dOWGroup);
+      dOWGroup.appendChild(dOWElement);
+      dOWGroup.setAttribute("transform", `rotate(${(360 / 7) * i}, 135, 195)`);
+    }
+  }
+
   const mount = () => {
     buildTwelveHourRing();
+    buildDayOfWeekRing();
     getTheTime();
     setRunClock(setInterval(getTheTime, 1000));
 
@@ -121,10 +147,15 @@ function FaceTurnClock(props) {
     let m = dateNow.getMinutes();
     let s = dateNow.getSeconds();
 
+    let day = dateNow.getDay();
+    day = day === 0 ? 7 : day;
+
     let hoursRotationSet =
       (h > 12 ? (h - 12) * (360 / 12) : h * (360 / 12)) +
       (m * (360 / 12)) / 60 +
       (s * (360 / 12)) / 60 / 60;
+
+      let dayRotationSet = (360/7)*(day-1);
 
     let timeString = "";
     timeString =
@@ -134,11 +165,13 @@ function FaceTurnClock(props) {
       ":" +
       (s < 10 ? "0" + s : s);
 
-    setRotationAmount(hoursRotationSet);
+    setTwelveHourRotationAmount(hoursRotationSet);
+    setDayOfWeekRotationAmount(dayRotationSet);
     setTimeString(timeString);
   }
 
-  const clockFaceRotation = `rotate(-${rotationAmount}, 200, 200)`;
+  const clockFaceRotation = `rotate(-${twelveHourRotationAmount}, 200, 200)`;
+  const dayOfWeekRotation = `rotate(-${dayOfWeekRotationAmount}, 135, 195)`;
 
   return (
     <div className={"clockContainer"}>
@@ -245,41 +278,7 @@ function FaceTurnClock(props) {
           />
         </g>
 
-        <g id="turningDaysRing">
-          {/* <text x="125" y="157" font-size="0.5rem" style="fill: #EBBD3F">
-            MON
-          </text>
-          <g transform="rotate(51.43 135 195)">
-            <text x="125" y="157" font-size="0.5rem" style="fill: #EBBD3F">
-              TUE
-            </text>
-          </g>
-          <g transform="rotate(102.86 135 195)">
-            <text x="125" y="157" font-size="0.5rem" style="fill: #EBBD3F">
-              WED
-            </text>
-          </g>
-          <g transform="rotate(154.29 135 195)">
-            <text x="125" y="157" font-size="0.5rem" style="fill: #EBBD3F">
-              THU
-            </text>
-          </g>
-          <g transform="rotate(205.71 135 195)">
-            <text x="125" y="157" font-size="0.5rem" style="fill: #EBBD3F">
-              FRI
-            </text>
-          </g>
-          <g transform="rotate(257.14 135 195)">
-            <text x="125" y="157" font-size="0.5rem" style="fill: #EBBD3F">
-              SAT
-            </text>
-          </g>
-          <g transform="rotate(308.57 135 195)">
-            <text x="125" y="157" font-size="0.5rem" style="fill: #EBBD3F">
-              SUN
-            </text>
-          </g> */}
-        </g>
+        <g id="turningDaysRing" transform={dayOfWeekRotation}></g>
       </svg>
       <div
         className={digitalOn ? "digitalClock visible" : "digitalClock hidden"}
@@ -288,7 +287,7 @@ function FaceTurnClock(props) {
           style={{
             color: digitalColor,
             width: Math.round(size / 12) * ((8 / 10) * 5.8),
-            fontSize: Math.round(size / 14),
+            fontSize: Math.round(size / 20),
           }}
         >
           {timeString}
