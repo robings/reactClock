@@ -38,10 +38,13 @@ function FaceTurnClock(props) {
   const [digitalColor] = useState(
     props.clockSettings.digitalColor !== undefined
       ? props.clockSettings.digitalColor
-      : "#CA6702"
+      : "#EBBD3F"
   );
   const [twelveHourRotationAmount, setTwelveHourRotationAmount] = useState(0);
   const [dayOfWeekRotationAmount, setDayOfWeekRotationAmount] = useState(0);
+  const [dateRotationAmount, setDateRotationAmount] = useState(0);
+  const [month, setMonth] = useState("");
+  const [year, setYear] = useState("");
   const [timeString, setTimeString] = useState("00:00:00");
   const [runClock, setRunClock] = useState("");
 
@@ -127,9 +130,39 @@ function FaceTurnClock(props) {
     }
   }
 
+  function buildDateRing() {
+    let svgElement = document.getElementById("turningDateRing");
+    for (let i = 0; i < 31; i++) {
+      let numOrDot = (i + 1) % 2 === 0 ? "." : i + 1;
+      let newGroup = document.createElementNS(
+        "http://www.w3.org/2000/svg",
+        "g"
+      );
+      let dayNum = document.createElementNS(
+        "http://www.w3.org/2000/svg",
+        "text"
+      );
+      let xValue;
+      if (numOrDot !== ".") {
+        xValue = i > 9 ? 262 : 264;
+      } else {
+        xValue = 264;
+      }
+      dayNum.setAttribute("x", xValue);
+      dayNum.setAttribute("y", "156");
+      dayNum.setAttribute("font-size", "0.35rem");
+      dayNum.setAttribute("fill", faceNosColor);
+      dayNum.textContent = numOrDot;
+      svgElement.appendChild(newGroup);
+      newGroup.appendChild(dayNum);
+      newGroup.setAttribute("transform", `rotate(${i * (360 / 31)} 265 195)`);
+    }
+  }
+
   const mount = () => {
     buildTwelveHourRing();
     buildDayOfWeekRing();
+    buildDateRing();
     getTheTime();
     setRunClock(setInterval(getTheTime, 1000));
 
@@ -150,12 +183,18 @@ function FaceTurnClock(props) {
     let day = dateNow.getDay();
     day = day === 0 ? 7 : day;
 
+    let date = dateNow.getDate();
+    let _month = dateNow.toLocaleString("default", { month: "short" });
+    let _year = dateNow.getFullYear();
+
     let hoursRotationSet =
       (h > 12 ? (h - 12) * (360 / 12) : h * (360 / 12)) +
       (m * (360 / 12)) / 60 +
       (s * (360 / 12)) / 60 / 60;
 
-      let dayRotationSet = (360/7)*(day-1);
+    let dayRotationSet = (360 / 7) * (day - 1);
+
+    let dateRotationSet = (360 / 31) * (date - 1);
 
     let timeString = "";
     timeString =
@@ -167,11 +206,15 @@ function FaceTurnClock(props) {
 
     setTwelveHourRotationAmount(hoursRotationSet);
     setDayOfWeekRotationAmount(dayRotationSet);
+    setDateRotationAmount(dateRotationSet);
+    setMonth(_month);
+    setYear(_year);
     setTimeString(timeString);
   }
 
   const clockFaceRotation = `rotate(-${twelveHourRotationAmount}, 200, 200)`;
   const dayOfWeekRotation = `rotate(-${dayOfWeekRotationAmount}, 135, 195)`;
+  const dateRotation = `rotate(-${dateRotationAmount}, 265, 195)`;
 
   return (
     <div className={"clockContainer"}>
@@ -279,14 +322,113 @@ function FaceTurnClock(props) {
         </g>
 
         <g id="turningDaysRing" transform={dayOfWeekRotation}></g>
+
+        <g id="dateRing">
+          <circle r="48" cx="265" cy="195" fill={clockOuterColor} />
+          <circle
+            r="46"
+            cx="265"
+            cy="195"
+            fill={clockOuterColor}
+            strokeWidth={1}
+            stroke={clockOuterBorder}
+          />
+          <circle
+            r="36"
+            cx="265"
+            cy="195"
+            fill={clockOuterColor}
+            strokeWidth={1}
+            stroke={clockOuterBorder}
+          />
+          <circle r="34" cx="265" cy="195" fill={clockInnerColor} />
+        </g>
+
+        <g id="datePointer">
+          <line
+            x1="265"
+            y1="162"
+            x2="265"
+            y2="180"
+            strokeWidth={1}
+            stroke={timePointerColor}
+          />
+          <line
+            x1="265"
+            y1="162"
+            x2="263"
+            y2="166"
+            strokeWidth={1}
+            stroke={timePointerColor}
+          />
+          <line
+            x1="265"
+            y1="162"
+            x2="267"
+            y2="166"
+            strokeWidth={1}
+            stroke={timePointerColor}
+          />
+        </g>
+
+        <g id="turningDateRing" transform={dateRotation}></g>
+
+        <g id="monthDisplay">
+          <rect x="230" y="187" width="25" height="14" fill={clockOuterColor} />
+          <line
+            x1="230"
+            y1="188"
+            x2="255"
+            y2="188"
+            strokeWidth={1}
+            stroke={clockOuterBorder}
+          />
+          <line
+            x1="230"
+            y1="200"
+            x2="255"
+            y2="200"
+            strokeWidth={1}
+            stroke={clockOuterBorder}
+          />
+          <text x="234" y="197" fill={faceNosColor} fontSize="0.6rem">
+            {month.toUpperCase()}
+          </text>
+        </g>
+
+        <g id="yearDisplay">
+          <rect x="270" y="187" width="29" height="14" fill={clockOuterColor} />
+          <line
+            x1="270"
+            y1="188"
+            x2="300"
+            y2="188"
+            strokeWidth={1}
+            stroke={clockOuterBorder}
+          />
+          <line
+            x1="270"
+            y1="200"
+            x2="300"
+            y2="200"
+            strokeWidth={1}
+            stroke={clockOuterBorder}
+          />
+          <text x="274" y="197" fill={faceNosColor} fontSize="0.6rem">
+            {year}
+          </text>
+        </g>
       </svg>
       <div
         className={digitalOn ? "digitalClock visible" : "digitalClock hidden"}
+        style={{
+          backgroundColor: clockOuterColor,
+          borderColor: clockOuterBorder,
+        }}
       >
         <div
           style={{
             color: digitalColor,
-            width: Math.round(size / 12) * ((8 / 10) * 5.8),
             fontSize: Math.round(size / 20),
           }}
         >
