@@ -23,13 +23,13 @@ ReactDOM.render(
   document.getElementById("root")
 );
 ```
+
 - This shows all the possible settings.
-- You can add as many or as few of array properties as you wish, as all of the props have defaults.
+- You can add as many or as few of the clockSettings object properties as you wish, as all of the props have defaults.
 - Size is in px
 - Colors can be any format supported by HTML
 - digitalOn is a boolean to turn the digital display on or off
 - You can have an empty clockSettings object, but it must be present
-
 
 # Notes from Create React App
 
