@@ -50,7 +50,7 @@ function FaceTurnClock(props) {
     { faceNo: "I", x: 198 },
     { faceNo: "II", x: 194 },
     { faceNo: "III", x: 192 },
-    { faceNo: "IIII", x: 188 },
+    { faceNo: "IIII", x: 189 },
     { faceNo: "V", x: 194 },
     { faceNo: "VI", x: 190 },
     { faceNo: "VII", x: 188 },
