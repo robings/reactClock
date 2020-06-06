@@ -38,11 +38,12 @@ function FaceTurnClock(props) {
   const [digitalColor] = useState(
     props.clockSettings.digitalColor !== undefined
       ? props.clockSettings.digitalColor
-      : "#CA6702"
+      : "#EBBD3F"
   );
   const [twelveHourRotationAmount, setTwelveHourRotationAmount] = useState(0);
   const [dayOfWeekRotationAmount, setDayOfWeekRotationAmount] = useState(0);
   const [dateRotationAmount, setDateRotationAmount] = useState(0);
+  const [month, setMonth] = useState("");
   const [timeString, setTimeString] = useState("00:00:00");
   const [runClock, setRunClock] = useState("");
 
@@ -181,7 +182,8 @@ function FaceTurnClock(props) {
     let day = dateNow.getDay();
     day = day === 0 ? 7 : day;
 
-    let date = dateNow.getDate()
+    let date = dateNow.getDate();
+    let _month = dateNow.toLocaleString("default", { month: "short" });
 
     let hoursRotationSet =
       (h > 12 ? (h - 12) * (360 / 12) : h * (360 / 12)) +
@@ -190,7 +192,7 @@ function FaceTurnClock(props) {
 
     let dayRotationSet = (360 / 7) * (day - 1);
 
-    let dateRotationSet = (360/31)*(date-1)
+    let dateRotationSet = (360 / 31) * (date - 1);
 
     let timeString = "";
     timeString =
@@ -203,6 +205,7 @@ function FaceTurnClock(props) {
     setTwelveHourRotationAmount(hoursRotationSet);
     setDayOfWeekRotationAmount(dayRotationSet);
     setDateRotationAmount(dateRotationSet);
+    setMonth(_month);
     setTimeString(timeString);
   }
 
@@ -366,14 +369,24 @@ function FaceTurnClock(props) {
         </g>
 
         <g id="turningDateRing" transform={dateRotation}></g>
+
+        <g id="monthDisplay">
+          <rect x="270" y="188" width="29" height="12" fill={clockOuterColor} />
+          <text x="274" y="198" fill={faceNosColor} fontSize="0.7rem">
+            {month.toUpperCase()}
+          </text>
+        </g>
       </svg>
       <div
         className={digitalOn ? "digitalClock visible" : "digitalClock hidden"}
+        style={{
+          backgroundColor: clockOuterColor,
+          borderColor: clockOuterBorder,
+        }}
       >
         <div
           style={{
             color: digitalColor,
-            width: Math.round(size / 12) * ((8 / 10) * 5.8),
             fontSize: Math.round(size / 20),
           }}
         >

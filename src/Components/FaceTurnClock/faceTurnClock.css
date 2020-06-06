@@ -12,6 +12,9 @@
 
 .digitalClock {
   position: absolute;
+  border-top: 1px solid;
+  border-bottom: 1px solid;
+  padding: 0 5px;
   left: 50%;
   top: 30%;
   transform: translate(-50%, 0%);

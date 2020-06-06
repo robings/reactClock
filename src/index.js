@@ -9,8 +9,8 @@ const clockSettings = {
   // clockInnerColor: "slategray",
   // timePointerColor: "gold",
   // faceNosColor: "gold",
-  // digitalOn: true,
-  digitalColor: "black",
+  // digitalOn: false,
+  // digitalColor: "#EBBD3F",
 };
 
 ReactDOM.render(
