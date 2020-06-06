@@ -4,13 +4,13 @@ import FaceTurnClock from "./Components/FaceTurnClock/FaceTurnClock";
 
 const clockSettings = {
   size: 600,
-  // clockOuterColor: "green",
-  // clockOuterBorder: "orange",
-  // clockInnerColor: "slategray",
-  // timePointerColor: "gold",
-  // faceNosColor: "gold",
-  // digitalOn: true,
-  // digitalColor: "#EBBD3F",
+  clockOuterColor: "green",
+  clockOuterBorder: "orange",
+  clockInnerColor: "whitesmoke",
+  timePointerColor: "gold",
+  faceNosColor: "gold",
+  digitalOn: true,
+  digitalColor: "#EBBD3F",
 };
 
 ReactDOM.render(

@@ -218,6 +218,8 @@ for(let i=0; i<24; i++) {
 
     let dateRotationSet = (360 / 31) * (date - 1);
 
+    let twentyFourHourRotationSet = (h*(360/24)) + ((m*(360/24))/60) + (((s*(360/24))/60)/60)
+
     let timeString = "";
     timeString =
       (h < 10 ? "0" + h : h) +
@@ -231,12 +233,14 @@ for(let i=0; i<24; i++) {
     setDateRotationAmount(dateRotationSet);
     setMonth(_month);
     setYear(_year);
+    setTwentyFourHourRotationAmount(twentyFourHourRotationSet)
     setTimeString(timeString);
   }
 
   const clockFaceRotation = `rotate(-${twelveHourRotationAmount}, 200, 200)`;
   const dayOfWeekRotation = `rotate(-${dayOfWeekRotationAmount}, 135, 195)`;
   const dateRotation = `rotate(-${dateRotationAmount}, 265, 195)`;
+  const twentyFourHourRotation = `rotate(-${twentyFourHourRotationAmount}, 200, 265)`;
 
   return (
     <div className={"clockContainer"}>
@@ -489,7 +493,7 @@ for(let i=0; i<24; i++) {
           />
         </g>
 
-        <g id="turningTwentyFourHrRing"></g>
+        <g id="turningTwentyFourHrRing" transform={twentyFourHourRotation}></g>
       </svg>
       <div
         className={digitalOn ? "digitalClock visible" : "digitalClock hidden"}
