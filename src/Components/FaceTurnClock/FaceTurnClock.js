@@ -44,6 +44,7 @@ function FaceTurnClock(props) {
   const [dayOfWeekRotationAmount, setDayOfWeekRotationAmount] = useState(0);
   const [dateRotationAmount, setDateRotationAmount] = useState(0);
   const [month, setMonth] = useState("");
+  const [year, setYear] = useState("");
   const [timeString, setTimeString] = useState("00:00:00");
   const [runClock, setRunClock] = useState("");
 
@@ -184,6 +185,7 @@ function FaceTurnClock(props) {
 
     let date = dateNow.getDate();
     let _month = dateNow.toLocaleString("default", { month: "short" });
+    let _year = dateNow.getFullYear();
 
     let hoursRotationSet =
       (h > 12 ? (h - 12) * (360 / 12) : h * (360 / 12)) +
@@ -206,6 +208,7 @@ function FaceTurnClock(props) {
     setDayOfWeekRotationAmount(dayRotationSet);
     setDateRotationAmount(dateRotationSet);
     setMonth(_month);
+    setYear(_year);
     setTimeString(timeString);
   }
 
@@ -371,9 +374,48 @@ function FaceTurnClock(props) {
         <g id="turningDateRing" transform={dateRotation}></g>
 
         <g id="monthDisplay">
-          <rect x="270" y="188" width="29" height="12" fill={clockOuterColor} />
-          <text x="274" y="198" fill={faceNosColor} fontSize="0.7rem">
+          <rect x="230" y="187" width="25" height="14" fill={clockOuterColor} />
+          <line
+            x1="230"
+            y1="188"
+            x2="255"
+            y2="188"
+            strokeWidth={1}
+            stroke={clockOuterBorder}
+          />
+          <line
+            x1="230"
+            y1="200"
+            x2="255"
+            y2="200"
+            strokeWidth={1}
+            stroke={clockOuterBorder}
+          />
+          <text x="234" y="197" fill={faceNosColor} fontSize="0.6rem">
             {month.toUpperCase()}
+          </text>
+        </g>
+
+        <g id="yearDisplay">
+          <rect x="270" y="187" width="29" height="14" fill={clockOuterColor} />
+          <line
+            x1="270"
+            y1="188"
+            x2="300"
+            y2="188"
+            strokeWidth={1}
+            stroke={clockOuterBorder}
+          />
+          <line
+            x1="270"
+            y1="200"
+            x2="300"
+            y2="200"
+            strokeWidth={1}
+            stroke={clockOuterBorder}
+          />
+          <text x="274" y="197" fill={faceNosColor} fontSize="0.6rem">
+            {year}
           </text>
         </g>
       </svg>
