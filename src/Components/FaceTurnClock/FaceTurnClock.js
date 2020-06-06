@@ -494,6 +494,29 @@ for(let i=0; i<24; i++) {
         </g>
 
         <g id="turningTwentyFourHrRing" transform={twentyFourHourRotation}></g>
+
+        <g id="digitalDisplay">
+        <rect x="168" y="121" width="64" height="23" fill={clockOuterColor} />
+          <line
+            x1="168"
+            y1="123"
+            x2="232"
+            y2="123"
+            strokeWidth={1}
+            stroke={clockOuterBorder}
+          />
+          <line
+            x1="168"
+            y1="142"
+            x2="232"
+            y2="142"
+            strokeWidth={1}
+            stroke={clockOuterBorder}
+          />
+          <text x="171" y="138" fill={faceNosColor}>
+            {timeString}
+          </text>
+        </g>
       </svg>
       <div
         className={digitalOn ? "digitalClock visible" : "digitalClock hidden"}
