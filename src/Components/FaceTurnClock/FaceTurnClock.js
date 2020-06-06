@@ -42,6 +42,7 @@ function FaceTurnClock(props) {
   );
   const [twelveHourRotationAmount, setTwelveHourRotationAmount] = useState(0);
   const [dayOfWeekRotationAmount, setDayOfWeekRotationAmount] = useState(0);
+  const [dateRotationAmount, setDateRotationAmount] = useState(0);
   const [timeString, setTimeString] = useState("00:00:00");
   const [runClock, setRunClock] = useState("");
 
@@ -127,9 +128,39 @@ function FaceTurnClock(props) {
     }
   }
 
+  function buildDateRing() {
+    let svgElement = document.getElementById("turningDateRing");
+    for (let i = 0; i < 31; i++) {
+      let numOrDot = (i + 1) % 2 === 0 ? "." : i + 1;
+      let newGroup = document.createElementNS(
+        "http://www.w3.org/2000/svg",
+        "g"
+      );
+      let dayNum = document.createElementNS(
+        "http://www.w3.org/2000/svg",
+        "text"
+      );
+      let xValue;
+      if (numOrDot !== ".") {
+        xValue = i > 9 ? 262 : 264;
+      } else {
+        xValue = 264;
+      }
+      dayNum.setAttribute("x", xValue);
+      dayNum.setAttribute("y", "156");
+      dayNum.setAttribute("font-size", "0.35rem");
+      dayNum.setAttribute("fill", faceNosColor);
+      dayNum.textContent = numOrDot;
+      svgElement.appendChild(newGroup);
+      newGroup.appendChild(dayNum);
+      newGroup.setAttribute("transform", `rotate(${i * (360 / 31)} 265 195)`);
+    }
+  }
+
   const mount = () => {
     buildTwelveHourRing();
     buildDayOfWeekRing();
+    buildDateRing();
     getTheTime();
     setRunClock(setInterval(getTheTime, 1000));
 
@@ -150,12 +181,16 @@ function FaceTurnClock(props) {
     let day = dateNow.getDay();
     day = day === 0 ? 7 : day;
 
+    let date = dateNow.getDate()
+
     let hoursRotationSet =
       (h > 12 ? (h - 12) * (360 / 12) : h * (360 / 12)) +
       (m * (360 / 12)) / 60 +
       (s * (360 / 12)) / 60 / 60;
 
     let dayRotationSet = (360 / 7) * (day - 1);
+
+    let dateRotationSet = (360/31)*(date-1)
 
     let timeString = "";
     timeString =
@@ -167,11 +202,13 @@ function FaceTurnClock(props) {
 
     setTwelveHourRotationAmount(hoursRotationSet);
     setDayOfWeekRotationAmount(dayRotationSet);
+    setDateRotationAmount(dateRotationSet);
     setTimeString(timeString);
   }
 
   const clockFaceRotation = `rotate(-${twelveHourRotationAmount}, 200, 200)`;
   const dayOfWeekRotation = `rotate(-${dayOfWeekRotationAmount}, 135, 195)`;
+  const dateRotation = `rotate(-${dateRotationAmount}, 265, 195)`;
 
   return (
     <div className={"clockContainer"}>
@@ -328,7 +365,7 @@ function FaceTurnClock(props) {
           />
         </g>
 
-        <g id="turningDateRing"></g>
+        <g id="turningDateRing" transform={dateRotation}></g>
       </svg>
       <div
         className={digitalOn ? "digitalClock visible" : "digitalClock hidden"}
