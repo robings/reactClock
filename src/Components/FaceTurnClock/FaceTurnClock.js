@@ -522,7 +522,7 @@ function FaceTurnClock(props) {
             strokeWidth={1}
             stroke={clockOuterBorder}
           />
-          <text x="171" y="138" fill={faceNosColor}>
+          <text x="171" y="138" fill={digitalColor}>
             {timeString}
           </text>
         </g>
