@@ -7,7 +7,7 @@ const clockSettings = {
   clockOuterColor: "#0078D7",
   clockOuterBorder: "#DDDDDD",
   clockInnerColor: "#FFFFFF",
-  timePointerColor: "0078D7",
+  timePointerColor: "#0078D7",
   faceNosColor: "#DDDDDD",
   digitalOn: true,
   digitalColor: "#DDDDDD",
