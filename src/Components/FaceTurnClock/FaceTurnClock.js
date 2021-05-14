@@ -124,8 +124,12 @@ function FaceTurnClock(props) {
           "http://www.w3.org/2000/svg",
           "text"
         );
+
+        let xMove = 0;
+        if (i === 1 || i === 4 || i === 5) xMove = 3;
+        if (i === 3 || i === 6) xMove = 2;
   
-        dOWElement.setAttribute("x", 125);
+        dOWElement.setAttribute("x", (125 + xMove));
         dOWElement.setAttribute("y", 157);
         dOWElement.textContent = daysOfTheWeek[i];
         dOWElement.setAttribute("fill", faceNosColor);
