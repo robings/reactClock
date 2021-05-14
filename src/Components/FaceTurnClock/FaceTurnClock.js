@@ -2,40 +2,40 @@ import React, { useState, useEffect } from "react";
 import "./faceTurnClock.css";
 
 function FaceTurnClock(props) {
-  const [size] = useState(
+  const size = (
     props.clockSettings.size !== undefined ? props.clockSettings.size : 200
   );
-  const [clockOuterColor] = useState(
+  const clockOuterColor = (
     props.clockSettings.clockOuterColor !== undefined
       ? props.clockSettings.clockOuterColor
       : "#1C2527"
   );
-  const [clockInnerColor] = useState(
+  const clockInnerColor = (
     props.clockSettings.clockInnerColor !== undefined
       ? props.clockSettings.clockInnerColor
       : "#FFFFFF"
   );
-  const [clockOuterBorder] = useState(
+  const clockOuterBorder = (
     props.clockSettings.clockOuterBorder !== undefined
       ? props.clockSettings.clockOuterBorder
       : "#999999"
   );
-  const [timePointerColor] = useState(
+  const timePointerColor = (
     props.clockSettings.timePointerColor !== undefined
       ? props.clockSettings.timePointerColor
       : "#CA6702"
   );
-  const [faceNosColor] = useState(
+  const faceNosColor = (
     props.clockSettings.faceNosColor !== undefined
       ? props.clockSettings.faceNosColor
       : "#EBBD3F"
   );
-  const [digitalOn] = useState(
+  const digitalOn = (
     props.clockSettings.digitalOn !== undefined
       ? props.clockSettings.digitalOn
       : true
   );
-  const [digitalColor] = useState(
+  const digitalColor = (
     props.clockSettings.digitalColor !== undefined
       ? props.clockSettings.digitalColor
       : "#EBBD3F"
@@ -50,158 +50,160 @@ function FaceTurnClock(props) {
   const [month, setMonth] = useState("");
   const [year, setYear] = useState("");
   const [timeString, setTimeString] = useState("00:00:00");
-  const [runClock, setRunClock] = useState("");
 
-  const faceNos = [
-    { faceNo: "XII", x: 188 },
-    { faceNo: "I", x: 198 },
-    { faceNo: "II", x: 194 },
-    { faceNo: "III", x: 192 },
-    { faceNo: "IIII", x: 189 },
-    { faceNo: "V", x: 194 },
-    { faceNo: "VI", x: 190 },
-    { faceNo: "VII", x: 188 },
-    { faceNo: "VIII", x: 184 },
-    { faceNo: "IX", x: 192 },
-    { faceNo: "X", x: 195 },
-    { faceNo: "XI", x: 190 },
-  ];
+  useEffect(()=> {
+    const faceNos = [
+      { faceNo: "XII", x: 188 },
+      { faceNo: "I", x: 198 },
+      { faceNo: "II", x: 194 },
+      { faceNo: "III", x: 192 },
+      { faceNo: "IIII", x: 189 },
+      { faceNo: "V", x: 194 },
+      { faceNo: "VI", x: 190 },
+      { faceNo: "VII", x: 188 },
+      { faceNo: "VIII", x: 184 },
+      { faceNo: "IX", x: 192 },
+      { faceNo: "X", x: 195 },
+      { faceNo: "XI", x: 190 },
+    ];
 
-  function buildTwelveHourRing() {
-    let svgElement = document.getElementById("turningClockFace");
-    for (let i = 0; i < 12 * 4; i++) {
-      let newLine = document.createElementNS(
-        "http://www.w3.org/2000/svg",
-        "line"
-      );
-      let y1Attribute;
-      if (i % 4 === 0) {
-        y1Attribute = 69;
-      } else {
-        y1Attribute = 71;
+    let runClock = (setInterval(getTheTime, 1000));
+
+    function buildTwelveHourRing() {
+      let svgElement = document.getElementById("turningClockFace");
+      for (let i = 0; i < 12 * 4; i++) {
+        let newLine = document.createElementNS(
+          "http://www.w3.org/2000/svg",
+          "line"
+        );
+        let y1Attribute;
+        if (i % 4 === 0) {
+          y1Attribute = 69;
+        } else {
+          y1Attribute = 71;
+        }
+        newLine.setAttribute("x1", "200");
+        newLine.setAttribute("y1", y1Attribute);
+        newLine.setAttribute("x2", "200");
+        newLine.setAttribute("y2", "74");
+        newLine.setAttribute("stroke", clockOuterBorder);
+        newLine.setAttribute("transform", `rotate(${i * 7.5}, 200, 200)`);
+        svgElement.appendChild(newLine);
       }
-      newLine.setAttribute("x1", "200");
-      newLine.setAttribute("y1", y1Attribute);
-      newLine.setAttribute("x2", "200");
-      newLine.setAttribute("y2", "74");
-      newLine.setAttribute("stroke", clockOuterBorder);
-      newLine.setAttribute("transform", `rotate(${i * 7.5}, 200, 200)`);
-      svgElement.appendChild(newLine);
+      faceNos.forEach((_faceNo, key) => {
+        let faceNoGroup = document.createElementNS(
+          "http://www.w3.org/2000/svg",
+          "g"
+        );
+        let faceNoElement = document.createElementNS(
+          "http://www.w3.org/2000/svg",
+          "text"
+        );
+        faceNoElement.setAttribute("x", _faceNo.x);
+        faceNoElement.setAttribute("y", 67);
+        faceNoElement.textContent = _faceNo.faceNo;
+        faceNoElement.setAttribute("fill", faceNosColor);
+        svgElement.appendChild(faceNoGroup);
+        faceNoGroup.appendChild(faceNoElement);
+        faceNoGroup.setAttribute(
+          "transform",
+          `rotate(${(360 / 12) * key}, 200, 200)`
+        );
+      });
     }
-    faceNos.forEach((_faceNo, key) => {
-      let faceNoGroup = document.createElementNS(
-        "http://www.w3.org/2000/svg",
-        "g"
-      );
-      let faceNoElement = document.createElementNS(
-        "http://www.w3.org/2000/svg",
-        "text"
-      );
-      faceNoElement.setAttribute("x", _faceNo.x);
-      faceNoElement.setAttribute("y", 67);
-      faceNoElement.textContent = _faceNo.faceNo;
-      faceNoElement.setAttribute("fill", faceNosColor);
-      svgElement.appendChild(faceNoGroup);
-      faceNoGroup.appendChild(faceNoElement);
-      faceNoGroup.setAttribute(
-        "transform",
-        `rotate(${(360 / 12) * key}, 200, 200)`
-      );
-    });
-  }
-
-  function buildDayOfWeekRing() {
-    let svgElement = document.getElementById("turningDaysRing");
-    const daysOfTheWeek = ["MON", "TUE", "WED", "THU", "FRI", "SAT", "SUN"];
-    for (let i = 0; i < 7; i++) {
-      let dOWGroup = document.createElementNS(
-        "http://www.w3.org/2000/svg",
-        "g"
-      );
-      let dOWElement = document.createElementNS(
-        "http://www.w3.org/2000/svg",
-        "text"
-      );
-
-      dOWElement.setAttribute("x", 125);
-      dOWElement.setAttribute("y", 157);
-      dOWElement.textContent = daysOfTheWeek[i];
-      dOWElement.setAttribute("fill", faceNosColor);
-      dOWElement.setAttribute("font-size", "0.5rem");
-      svgElement.appendChild(dOWGroup);
-      dOWGroup.appendChild(dOWElement);
-      dOWGroup.setAttribute("transform", `rotate(${(360 / 7) * i}, 135, 195)`);
-    }
-  }
-
-  function buildDateRing() {
-    let svgElement = document.getElementById("turningDateRing");
-    for (let i = 0; i < 31; i++) {
-      let numOrDot = (i + 1) % 2 === 0 ? "." : i + 1;
-      let newGroup = document.createElementNS(
-        "http://www.w3.org/2000/svg",
-        "g"
-      );
-      let dayNum = document.createElementNS(
-        "http://www.w3.org/2000/svg",
-        "text"
-      );
-      let xValue;
-      if (numOrDot !== ".") {
-        xValue = i > 9 ? 262 : 264;
-      } else {
-        xValue = 264;
+  
+    function buildDayOfWeekRing() {
+      let svgElement = document.getElementById("turningDaysRing");
+      const daysOfTheWeek = ["MON", "TUE", "WED", "THU", "FRI", "SAT", "SUN"];
+      for (let i = 0; i < 7; i++) {
+        let dOWGroup = document.createElementNS(
+          "http://www.w3.org/2000/svg",
+          "g"
+        );
+        let dOWElement = document.createElementNS(
+          "http://www.w3.org/2000/svg",
+          "text"
+        );
+  
+        dOWElement.setAttribute("x", 125);
+        dOWElement.setAttribute("y", 157);
+        dOWElement.textContent = daysOfTheWeek[i];
+        dOWElement.setAttribute("fill", faceNosColor);
+        dOWElement.setAttribute("font-size", "0.5rem");
+        svgElement.appendChild(dOWGroup);
+        dOWGroup.appendChild(dOWElement);
+        dOWGroup.setAttribute("transform", `rotate(${(360 / 7) * i}, 135, 195)`);
       }
-      dayNum.setAttribute("x", xValue);
-      dayNum.setAttribute("y", "156");
-      dayNum.setAttribute("font-size", "0.35rem");
-      dayNum.setAttribute("fill", faceNosColor);
-      dayNum.textContent = numOrDot;
-      svgElement.appendChild(newGroup);
-      newGroup.appendChild(dayNum);
-      newGroup.setAttribute("transform", `rotate(${i * (360 / 31)} 265 195)`);
     }
-  }
-
-  function buildTwentyFourHourRing() {
-    let svgElement = document.getElementById("turningTwentyFourHrRing");
-    for (let i = 0; i < 24; i++) {
-      let hourValue = i === 0 ? 24 : i;
-      let newGroup = document.createElementNS(
-        "http://www.w3.org/2000/svg",
-        "g"
-      );
-      let dateNum = document.createElementNS(
-        "http://www.w3.org/2000/svg",
-        "text"
-      );
-      let xValue = hourValue > 9 ? 197 : 199;
-
-      dateNum.setAttribute("x", xValue);
-      dateNum.setAttribute("y", "226");
-      dateNum.setAttribute("font-size", "0.35rem");
-      dateNum.setAttribute("fill", faceNosColor);
-      dateNum.textContent = `${hourValue}`;
-      svgElement.appendChild(newGroup);
-      newGroup.appendChild(dateNum);
-      newGroup.setAttribute("transform", `rotate(${i * (360 / 24)} 200 265)`);
+  
+    function buildDateRing() {
+      let svgElement = document.getElementById("turningDateRing");
+      for (let i = 0; i < 31; i++) {
+        let numOrDot = (i + 1) % 2 === 0 ? "." : i + 1;
+        let newGroup = document.createElementNS(
+          "http://www.w3.org/2000/svg",
+          "g"
+        );
+        let dayNum = document.createElementNS(
+          "http://www.w3.org/2000/svg",
+          "text"
+        );
+        let xValue;
+        if (numOrDot !== ".") {
+          xValue = i > 9 ? 262 : 264;
+        } else {
+          xValue = 264;
+        }
+        dayNum.setAttribute("x", xValue);
+        dayNum.setAttribute("y", "156");
+        dayNum.setAttribute("font-size", "0.35rem");
+        dayNum.setAttribute("fill", faceNosColor);
+        dayNum.textContent = numOrDot;
+        svgElement.appendChild(newGroup);
+        newGroup.appendChild(dayNum);
+        newGroup.setAttribute("transform", `rotate(${i * (360 / 31)} 265 195)`);
+      }
     }
-  }
 
-  const mount = () => {
-    buildTwelveHourRing();
-    buildDayOfWeekRing();
-    buildDateRing();
-    buildTwentyFourHourRing();
-    getTheTime();
-    setRunClock(setInterval(getTheTime, 1000));
+    function buildTwentyFourHourRing() {
+      let svgElement = document.getElementById("turningTwentyFourHrRing");
+      for (let i = 0; i < 24; i++) {
+        let hourValue = i === 0 ? 24 : i;
+        let newGroup = document.createElementNS(
+          "http://www.w3.org/2000/svg",
+          "g"
+        );
+        let dateNum = document.createElementNS(
+          "http://www.w3.org/2000/svg",
+          "text"
+        );
+        let xValue = hourValue > 9 ? 197 : 199;
+  
+        dateNum.setAttribute("x", xValue);
+        dateNum.setAttribute("y", "226");
+        dateNum.setAttribute("font-size", "0.35rem");
+        dateNum.setAttribute("fill", faceNosColor);
+        dateNum.textContent = `${hourValue}`;
+        svgElement.appendChild(newGroup);
+        newGroup.appendChild(dateNum);
+        newGroup.setAttribute("transform", `rotate(${i * (360 / 24)} 200 265)`);
+      }
+    }
 
-    return () => {
-      clearInterval(runClock);
+    const mount = () => {
+      buildTwelveHourRing();
+      buildDayOfWeekRing();
+      buildDateRing();
+      buildTwentyFourHourRing();
+      getTheTime();
+  
+      return () => {
+        clearInterval(runClock);
+      };
     };
-  };
 
-  useEffect(mount, []);
+    mount();
+  }, [clockOuterBorder, faceNosColor]);
 
   function getTheTime() {
     let dateNow = new Date();
@@ -409,11 +411,11 @@ function FaceTurnClock(props) {
         <g id="turningDateRing" transform={dateRotation}></g>
 
         <g id="monthDisplay">
-          <rect x="230" y="187" width="25" height="14" fill={clockOuterColor} />
+          <rect x="230" y="187" width="29" height="14" fill={clockOuterColor} />
           <line
             x1="230"
             y1="188"
-            x2="255"
+            x2="259"
             y2="188"
             strokeWidth={1}
             stroke={clockOuterBorder}
@@ -421,7 +423,7 @@ function FaceTurnClock(props) {
           <line
             x1="230"
             y1="200"
-            x2="255"
+            x2="259"
             y2="200"
             strokeWidth={1}
             stroke={clockOuterBorder}
