@@ -1,5 +1,5 @@
 import React from "react";
-import ReactDOM from "react-dom";
+import { createRoot } from "react-dom/client";
 import FaceTurnClock from "./Components/FaceTurnClock/FaceTurnClock";
 
 // const clockSettings = {
@@ -26,9 +26,8 @@ import FaceTurnClock from "./Components/FaceTurnClock/FaceTurnClock";
 
 const clockSettings = {
   size: 400,
-}
+};
 
-ReactDOM.render(
-  <FaceTurnClock clockSettings={clockSettings} />,
-  document.getElementById("root")
-);
+const container = document.getElementById("root");
+const root = createRoot(container);
+root.render(<FaceTurnClock clockSettings={clockSettings} />);
