@@ -1,5 +1,5 @@
-import React from "react";
-import { createRoot } from "react-dom/client";
+import { StrictMode } from 'react'
+import { createRoot } from 'react-dom/client'
 import FaceTurnClock from "./Components/FaceTurnClock/FaceTurnClock";
 
 // const clockSettings = {
@@ -26,8 +26,17 @@ import FaceTurnClock from "./Components/FaceTurnClock/FaceTurnClock";
 
 const clockSettings = {
   size: 400,
+  clockOuterColor: undefined,
+  clockOuterBorder: undefined,
+  clockInnerColor: undefined,
+  timePointerColor: undefined,
+  faceNosColor: undefined,
+  digitalOn: undefined,
+  digitalColor: undefined,
 };
 
-const container = document.getElementById("root");
-const root = createRoot(container);
-root.render(<FaceTurnClock clockSettings={clockSettings} />);
+createRoot(document.getElementById('root')!).render(
+  <StrictMode>
+    <FaceTurnClock clockSettings={clockSettings} /> 
+  </StrictMode>
+)
