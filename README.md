@@ -1,73 +1,32 @@
-# React + TypeScript + Vite
+# React Clock Component
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+An exercise to create a clock as a functional component which can be customised by passing optional props.
 
-Currently, two official plugins are available:
+- An example of the component in use:
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Oxc](https://oxc.rs)
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/)
+```
+import FaceTurnClock from "./Components/FaceTurnClock/FaceTurnClock";
 
-## React Compiler
+const clockSettings = {
+  size: 600,
+  clockOuterColor: "green",
+  clockOuterBorder: "orange",
+  clockInnerColor: "silver",
+  timePointerColor: "gold",
+  faceNosColor: "gold",
+  digitalOn: true,
+  digitalColor: "whitesmoke",
+};
 
-The React Compiler is not enabled on this template because of its impact on dev & build performances. To add it, see [this documentation](https://react.dev/learn/react-compiler/installation).
-
-## Expanding the ESLint configuration
-
-If you are developing a production application, we recommend updating the configuration to enable type-aware lint rules:
-
-```js
-export default defineConfig([
-  globalIgnores(['dist']),
-  {
-    files: ['**/*.{ts,tsx}'],
-    extends: [
-      // Other configs...
-
-      // Remove tseslint.configs.recommended and replace with this
-      tseslint.configs.recommendedTypeChecked,
-      // Alternatively, use this for stricter rules
-      tseslint.configs.strictTypeChecked,
-      // Optionally, add this for stylistic rules
-      tseslint.configs.stylisticTypeChecked,
-
-      // Other configs...
-    ],
-    languageOptions: {
-      parserOptions: {
-        project: ['./tsconfig.node.json', './tsconfig.app.json'],
-        tsconfigRootDir: import.meta.dirname,
-      },
-      // other options...
-    },
-  },
-])
+ReactDOM.render(
+  <FaceTurnClock clockSettings={clockSettings} />,
+  document.getElementById("root")
+);
 ```
 
-You can also install [eslint-plugin-react-x](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-x) and [eslint-plugin-react-dom](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-dom) for React-specific lint rules:
-
-```js
-// eslint.config.js
-import reactX from 'eslint-plugin-react-x'
-import reactDom from 'eslint-plugin-react-dom'
-
-export default defineConfig([
-  globalIgnores(['dist']),
-  {
-    files: ['**/*.{ts,tsx}'],
-    extends: [
-      // Other configs...
-      // Enable lint rules for React
-      reactX.configs['recommended-typescript'],
-      // Enable lint rules for React DOM
-      reactDom.configs.recommended,
-    ],
-    languageOptions: {
-      parserOptions: {
-        project: ['./tsconfig.node.json', './tsconfig.app.json'],
-        tsconfigRootDir: import.meta.dirname,
-      },
-      // other options...
-    },
-  },
-])
-```
+- This shows all the possible settings.
+- You can add as many or as few of the clockSettings object properties as you wish, as all of the props have defaults.
+- Size is in px
+- Colors can be any format supported by HTML
+- digitalOn is a boolean to turn the digital display on or off
+- You can have an empty clockSettings object, but it must be present
