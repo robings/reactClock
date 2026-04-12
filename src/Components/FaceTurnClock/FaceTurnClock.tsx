@@ -1,53 +1,55 @@
-import React, { useState, useEffect, useRef, useCallback } from "react";
+import { useState, useEffect, useRef, useCallback } from "react";
 import "./faceTurnClock.css";
+import "./IClockSettings.ts";
+import type { ClockSettings } from "./IClockSettings.ts";
 
-function FaceTurnClock(props) {
+function FaceTurnClock({ clockSettings }: { clockSettings: ClockSettings }) {
   const size = (
-    props.clockSettings.size !== undefined ? props.clockSettings.size : 200
+    clockSettings.size !== undefined ? clockSettings.size : 200
   );
   const clockOuterColor = (
-    props.clockSettings.clockOuterColor !== undefined
-      ? props.clockSettings.clockOuterColor
+    clockSettings.clockOuterColor !== undefined
+      ? clockSettings.clockOuterColor
       : "#1C2527"
   );
   const clockInnerColor = (
-    props.clockSettings.clockInnerColor !== undefined
-      ? props.clockSettings.clockInnerColor
+    clockSettings.clockInnerColor !== undefined
+      ? clockSettings.clockInnerColor
       : "#FFFFFF"
   );
-  const clockOuterBorder = props.clockSettings.clockOuterBorder !== undefined
-    ? props.clockSettings.clockOuterBorder
+  const clockOuterBorder = clockSettings.clockOuterBorder !== undefined
+    ? clockSettings.clockOuterBorder
     : "#999999";
 
   const timePointerColor = (
-    props.clockSettings.timePointerColor !== undefined
-      ? props.clockSettings.timePointerColor
+    clockSettings.timePointerColor !== undefined
+      ? clockSettings.timePointerColor
       : "#CA6702"
   );
-  const faceNosColor = props.clockSettings.faceNosColor !== undefined
-    ? props.clockSettings.faceNosColor
+  const faceNosColor = clockSettings.faceNosColor !== undefined
+    ? clockSettings.faceNosColor
     : "#EBBD3F";
 
   const digitalOn = (
-    props.clockSettings.digitalOn !== undefined
-      ? props.clockSettings.digitalOn
+    clockSettings.digitalOn !== undefined
+      ? clockSettings.digitalOn
       : true
   );
   const digitalColor = (
-    props.clockSettings.digitalColor !== undefined
-      ? props.clockSettings.digitalColor
+    clockSettings.digitalColor !== undefined
+      ? clockSettings.digitalColor
       : "#EBBD3F"
   );
-  const [twelveHourRotationAmount, setTwelveHourRotationAmount] = useState(0);
-  const [dayOfWeekRotationAmount, setDayOfWeekRotationAmount] = useState(0);
-  const [dateRotationAmount, setDateRotationAmount] = useState(0);
+  const [twelveHourRotationAmount, setTwelveHourRotationAmount] = useState<number>(0);
+  const [dayOfWeekRotationAmount, setDayOfWeekRotationAmount] = useState<number>(0);
+  const [dateRotationAmount, setDateRotationAmount] = useState<number>(0);
   const [
     twentyFourHourRotationAmount,
     setTwentyFourHourRotationAmount,
-  ] = useState(0);
-  const [month, setMonth] = useState("");
-  const [year, setYear] = useState("");
-  const [timeString, setTimeString] = useState("00:00:00");
+  ] = useState<number>(0);
+  const [month, setMonth] = useState<string>("");
+  const [year, setYear] = useState<string>("");
+  const [timeString, setTimeString] = useState<string>("00:00:00");
 
   const faceNos = useRef([
     { faceNo: "XII", x: 188 },
@@ -65,9 +67,9 @@ function FaceTurnClock(props) {
   ]);
 
   const buildTwelveHourRing = useCallback(() => {
-    let svgElement = document.getElementById("turningClockFace");
+    const svgElement = document.getElementById("turningClockFace");
     for (let i = 0; i < 12 * 4; i++) {
-      let newLine = document.createElementNS(
+      const newLine = document.createElementNS(
         "http://www.w3.org/2000/svg",
         "line"
       );
@@ -78,27 +80,27 @@ function FaceTurnClock(props) {
         y1Attribute = 71;
       }
       newLine.setAttribute("x1", "200");
-      newLine.setAttribute("y1", y1Attribute);
+      newLine.setAttribute("y1", y1Attribute.toString());
       newLine.setAttribute("x2", "200");
       newLine.setAttribute("y2", "74");
       newLine.setAttribute("stroke", clockOuterBorder);
       newLine.setAttribute("transform", `rotate(${i * 7.5}, 200, 200)`);
-      svgElement.appendChild(newLine);
+      svgElement!.appendChild(newLine);
     }
     faceNos.current.forEach((_faceNo, key) => {
-      let faceNoGroup = document.createElementNS(
+      const faceNoGroup = document.createElementNS(
         "http://www.w3.org/2000/svg",
         "g"
       );
-      let faceNoElement = document.createElementNS(
+      const faceNoElement = document.createElementNS(
         "http://www.w3.org/2000/svg",
         "text"
       );
-      faceNoElement.setAttribute("x", _faceNo.x);
-      faceNoElement.setAttribute("y", 67);
+      faceNoElement.setAttribute("x", _faceNo.x.toString());
+      faceNoElement.setAttribute("y", "67");
       faceNoElement.textContent = _faceNo.faceNo;
       faceNoElement.setAttribute("fill", faceNosColor);
-      svgElement.appendChild(faceNoGroup);
+      svgElement!.appendChild(faceNoGroup);
       faceNoGroup.appendChild(faceNoElement);
       faceNoGroup.setAttribute(
         "transform",
@@ -108,14 +110,14 @@ function FaceTurnClock(props) {
   }, [clockOuterBorder, faceNosColor]);
 
   const buildDayOfWeekRing = useCallback(() => {
-    let svgElement = document.getElementById("turningDaysRing");
+    const svgElement = document.getElementById("turningDaysRing");
     const daysOfTheWeek = ["MON", "TUE", "WED", "THU", "FRI", "SAT", "SUN"];
     for (let i = 0; i < 7; i++) {
-      let dOWGroup = document.createElementNS(
+      const dOWGroup = document.createElementNS(
         "http://www.w3.org/2000/svg",
         "g"
       );
-      let dOWElement = document.createElementNS(
+      const dOWElement = document.createElementNS(
         "http://www.w3.org/2000/svg",
         "text"
       );
@@ -124,26 +126,26 @@ function FaceTurnClock(props) {
       if (i === 1 || i === 4 || i === 5) xMove = 3;
       if (i === 3 || i === 6) xMove = 2;
 
-      dOWElement.setAttribute("x", (125 + xMove));
-      dOWElement.setAttribute("y", 157);
+      dOWElement.setAttribute("x", (125 + xMove).toString());
+      dOWElement.setAttribute("y", "157");
       dOWElement.textContent = daysOfTheWeek[i];
       dOWElement.setAttribute("fill", faceNosColor);
       dOWElement.setAttribute("font-size", "0.5rem");
-      svgElement.appendChild(dOWGroup);
+      svgElement!.appendChild(dOWGroup);
       dOWGroup.appendChild(dOWElement);
       dOWGroup.setAttribute("transform", `rotate(${(360 / 7) * i}, 135, 195)`);
     }
   }, [faceNosColor]);
 
   const buildDateRing = useCallback(() => {
-    let svgElement = document.getElementById("turningDateRing");
+    const svgElement = document.getElementById("turningDateRing");
     for (let i = 0; i < 31; i++) {
-      let numOrDot = (i + 1) % 2 === 0 ? "." : i + 1;
-      let newGroup = document.createElementNS(
+      const numOrDot = (i + 1) % 2 === 0 ? "." : i + 1;
+      const newGroup = document.createElementNS(
         "http://www.w3.org/2000/svg",
         "g"
       );
-      let dayNum = document.createElementNS(
+      const dayNum = document.createElementNS(
         "http://www.w3.org/2000/svg",
         "text"
       );
@@ -153,66 +155,66 @@ function FaceTurnClock(props) {
       } else {
         xValue = 264;
       }
-      dayNum.setAttribute("x", xValue);
+      dayNum.setAttribute("x", xValue.toString());
       dayNum.setAttribute("y", "156");
       dayNum.setAttribute("font-size", "0.35rem");
       dayNum.setAttribute("fill", faceNosColor);
-      dayNum.textContent = numOrDot;
-      svgElement.appendChild(newGroup);
+      dayNum.textContent = numOrDot.toString();
+      svgElement!.appendChild(newGroup);
       newGroup.appendChild(dayNum);
       newGroup.setAttribute("transform", `rotate(${i * (360 / 31)} 265 195)`);
     }
   }, [faceNosColor]);
 
   const buildTwentyFourHourRing = useCallback(() => {
-    let svgElement = document.getElementById("turningTwentyFourHrRing");
+    const svgElement = document.getElementById("turningTwentyFourHrRing");
     for (let i = 0; i < 24; i++) {
-      let hourValue = i === 0 ? 24 : i;
-      let newGroup = document.createElementNS(
+      const hourValue = i === 0 ? 24 : i;
+      const newGroup = document.createElementNS(
         "http://www.w3.org/2000/svg",
         "g"
       );
-      let dateNum = document.createElementNS(
+      const dateNum = document.createElementNS(
         "http://www.w3.org/2000/svg",
         "text"
       );
-      let xValue = hourValue > 9 ? 197 : 199;
+      const xValue = hourValue > 9 ? 197 : 199;
 
-      dateNum.setAttribute("x", xValue);
+      dateNum.setAttribute("x", xValue.toString());
       dateNum.setAttribute("y", "226");
       dateNum.setAttribute("font-size", "0.35rem");
       dateNum.setAttribute("fill", faceNosColor);
       dateNum.textContent = `${hourValue}`;
-      svgElement.appendChild(newGroup);
+      svgElement!.appendChild(newGroup);
       newGroup.appendChild(dateNum);
       newGroup.setAttribute("transform", `rotate(${i * (360 / 24)} 200 265)`);
     }
   }, [faceNosColor]);
 
   const getTheTime = useCallback(() => {
-    let dateNow = new Date();
+    const dateNow = new Date();
 
-    let h = dateNow.getHours();
-    let m = dateNow.getMinutes();
-    let s = dateNow.getSeconds();
+    const h = dateNow.getHours();
+    const m = dateNow.getMinutes();
+    const s = dateNow.getSeconds();
 
     let day = dateNow.getDay();
     day = day === 0 ? 7 : day;
 
-    let date = dateNow.getDate();
-    let _month = dateNow.toLocaleString("default", { month: "short" });
-    let _year = dateNow.getFullYear();
+    const date = dateNow.getDate();
+    const _month = dateNow.toLocaleString("default", { month: "short" });
+    const _year = dateNow.getFullYear();
 
-    let hoursRotationSet =
+    const hoursRotationSet =
       (h > 12 ? (h - 12) * (360 / 12) : h * (360 / 12)) +
       (m * (360 / 12)) / 60 +
       (s * (360 / 12)) / 60 / 60;
 
-    let dayRotationSet = (360 / 7) * (day - 1);
+    const dayRotationSet = (360 / 7) * (day - 1);
 
-    let dateRotationSet = (360 / 31) * (date - 1);
+    const dateRotationSet = (360 / 31) * (date - 1);
 
-    let twentyFourHourRotationSet =
+    const twentyFourHourRotationSet =
       h * (360 / 24) + (m * (360 / 24)) / 60 + (s * (360 / 24)) / 60 / 60;
 
     let timeString = "";
@@ -227,13 +229,13 @@ function FaceTurnClock(props) {
     setDayOfWeekRotationAmount(dayRotationSet);
     setDateRotationAmount(dateRotationSet);
     setMonth(_month);
-    setYear(_year);
+    setYear(_year.toString());
     setTwentyFourHourRotationAmount(twentyFourHourRotationSet);
     setTimeString(timeString);
   }, []);
 
   useEffect(()=> {
-    let runClock = (setInterval(getTheTime, 1000));
+    const runClock = (setInterval(getTheTime, 1000));
 
     const mount = () => {
       buildTwelveHourRing();
